@@ -1,0 +1,23 @@
+.carta {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    width: 85%;
+    max-width: 450px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px);
+    color: white;
+    padding: 30px;
+    border-radius: 25px;
+    display: none;
+    box-shadow: 0 0 40px #ff4d6d;
+    text-align: center;
+    opacity: 0;
+    transition: 0.6s ease;
+}
+
+.carta.activa {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
