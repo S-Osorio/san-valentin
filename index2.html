@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤️ TE AMOOO ❤️ ️</title>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+            font-family: Arial, sans-serif;
+        }
+
+        /* INTRO */
+        .intro {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #120018, #000);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            color: white;
+            text-align: center;
+        }
+
+        .intro button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* UNIVERSO */
+        #universo {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            background: radial-gradient(ellipse at center, #050010 0%, #000000 80%);
+            overflow: hidden;
+        }
+
+        /* Estrellas fondo */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        /* LLUVIA */
+        .falling-star {
+            position: fixed;
+            width: 2px;
+            height: 80px;
+            background: linear-gradient(white, transparent);
+            opacity: 0.8;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-100px);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(110vh);
+                opacity: 0;
+            }
+        }
+
+        /* CARTA */
+        .carta {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 85%;
+            max-width: 450px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(15px);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            display: none;
+            box-shadow: 0 0 30px #ff4d6d;
+            text-align: center;
+            opacity: 0;
+            transition: 0.6s ease;
+        }
+
+        .carta.activa {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Latido */
+        @keyframes latido {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.03); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* MENSAJE FINAL */
+        .final {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2em;
+            text-align: center;
+            opacity: 0;
+            transition: 2s;
+            text-shadow: 0 0 20px #ff4d6d;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="intro" id="intro">
+    <h1>🌌 Para Mi Princesita… Con Todo Mi Amor 💫</h1>
+    <button onclick="iniciar()">Entrar</button>
+</div>
+
+<div id="universo"></div>
+
+<div class="carta" id="carta">
+    <h3>Para ti ❤️</h3>
+    <p id="textoCarta"></p>
+    <button onclick="cerrarCarta()">Cerrar</button>
+</div>
+
+<audio id="musica" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-background-112191.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const universo = document.getElementById("universo");
+    const textoCarta = document.getElementById("textoCarta");
+    const musica = document.getElementById("musica");
+
+    const mensaje = `Princesa...
+
+Desde que llegaste a mi vida,
+no todo ha sido fácil y lo sabes.
+
+Hemos tenido días dias dificiles...
+momentos de dudas y de luchas...
+obstáculos que parecían interminables como ahora la distancia.
+
+Pero siempre encontramos la manera.
+
+La manera de volver a estar bien.
+De elegirnos.
+De seguir juntos.
+
+Gracias por quedarte mi amor.
+Gracias por no soltarme ni dejarme ir
+cuando todo se siente pesado.
+
+Ojitos bellos...
+
+Aunque a veces no me creas,
+cuando siento que mi vida se vuelve tenue,
+tú eres quien me muestra que aun hay luz.
+
+Desde el momento que te vi aqui en canada quede enamorado de ti
+eras mi insomio la razon por la que mi mente no descasaba
+ ......te amo con todo lo posible y lo imposible
+
+Eres mi mundo...
+mi bebé...
+mi todo.
+Mi princesa.
+
+❤️TE AMO❤️TE AMO❤️TE AMO❤️`;
+
+
+    // ESTRELLAS 3D
+    for (let i = 0; i < 800; i++) {
+        let star = document.createElement("div");
+        star.className = "star";
+
+        let x = (Math.random() - 0.5) * 3000;
+        let y = (Math.random() - 0.5) * 3000;
+        let z = Math.random() * 3000;
+
+        star.style.transform = `translate3d(${x}px, ${y}px, ${-z}px)`;
+
+        let size = (3000 - z) / 1500;
+        star.style.width = size + "px";
+        star.style.height = size + "px";
+
+        universo.appendChild(star);
+    }
+
+
+    // Movimiento 3D
+    document.addEventListener("mousemove", (e) => {
+        let rotX = (e.clientY / window.innerHeight - 0.5) * 20;
+        let rotY = (e.clientX / window.innerWidth - 0.5) * 20;
+
+        universo.style.transform = `
+    rotateX(${-rotX}deg)
+    rotateY(${rotY}deg)
+  `;
+    });
+
+
+    // Máquina de escribir mejorada
+    function escribirTexto(texto, i = 0) {
+        if (i < texto.length) {
+            textoCarta.innerHTML += texto.charAt(i) === "\n" ? "<br>" : texto.charAt(i);
+
+            let delay = 35;
+
+            if (texto.charAt(i) === ".") delay = 400;
+            if (texto.charAt(i) === ",") delay = 150;
+            if (texto.charAt(i) === "\n") delay = 200;
+
+            setTimeout(() => escribirTexto(texto, i + 1), delay);
+        } else {
+            activarLatido();
+        }
+    }
+
+
+    // Latido
+    function activarLatido() {
+        let carta = document.getElementById("carta");
+        carta.style.animation = "latido 1.5s infinite";
+    }
+
+
+    // Iniciar
+    function iniciar() {
+        document.getElementById("intro").style.display = "none";
+        musica.play();
+
+        setTimeout(() => {
+            let carta = document.getElementById("carta");
+            carta.style.display = "block";
+            setTimeout(() => carta.classList.add("activa"), 50);
+            escribirTexto(mensaje);
+        }, 1500);
+    }
+
+
+    // Cerrar carta
+    function cerrarCarta() {
+        let carta = document.getElementById("carta");
+        carta.classList.remove("activa");
+        carta.style.animation = "none";
+
+        setTimeout(() => {
+            carta.style.display = "none";
+            mostrarMensajeFinal();
+            iniciarLluvia();
+        }, 600);
+    }
+
+
+    // Mensaje final
+    function mostrarMensajeFinal() {
+        let mensajeFinal = document.createElement("div");
+        mensajeFinal.className = "final";
+        mensajeFinal.innerHTML = "Siempre serás mi universo 💫❤️";
+
+        document.body.appendChild(mensajeFinal);
+
+        setTimeout(() => {
+            mensajeFinal.style.opacity = "1";
+        }, 100);
+    }
+
+
+    // Lluvia de estrellas
+    function iniciarLluvia() {
+        setInterval(() => {
+            let estrella = document.createElement("div");
+            estrella.className = "falling-star";
+
+            estrella.style.left = Math.random() * window.innerWidth + "px";
+            estrella.style.animationDuration = (Math.random() * 2 + 1) + "s";
+
+            document.body.appendChild(estrella);
+
+            setTimeout(() => estrella.remove(), 3000);
+        }, 200);
+    }
+</script>
+
+</body>
+</html>
